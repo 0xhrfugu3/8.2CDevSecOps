@@ -37,15 +37,21 @@ pipeline {
       steps {
         withCredentials([string(credentialsId: 'SONAR_TOKEN', variable: 'SONAR_TOKEN')]) {
           sh '''
-            set -e
-            echo "Downloading SonarScanner CLI..."
-            curl -sSLo sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli.zip
+            set -euo pipefail
+
+            # Pick a known scanner version
+            SCANNER_VERSION="5.0.1.3006"
+            BASE_URL="https://binaries.sonarsource.com/Distribution/sonar-scanner-cli"
+            ZIP="sonar-scanner-cli-${SCANNER_VERSION}-linux.zip"
+
+            echo "Downloading SonarScanner CLI ${SCANNER_VERSION}..."
+            curl -sSfL -o "${ZIP}" "${BASE_URL}/${ZIP}"
 
             echo "Extracting SonarScanner..."
-            unzip -q -o sonar-scanner.zip
+            unzip -q -o "${ZIP}"
 
-            # find extracted directory dynamically
-            SCANNER_DIR=$(find . -maxdepth 1 -type d -name "sonar-scanner-*" | head -n1)
+            # Find extracted directory dynamically
+            SCANNER_DIR="$(find . -maxdepth 1 -type d -name "sonar-scanner-*${SCANNER_VERSION}*" | head -n1)"
 
             echo "Running SonarScanner..."
             "$SCANNER_DIR/bin/sonar-scanner"
@@ -55,4 +61,3 @@ pipeline {
     }
   }
 }
-
