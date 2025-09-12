@@ -37,6 +37,7 @@ pipeline {
       steps {
         withCredentials([string(credentialsId: 'SONAR_TOKEN', variable: 'SONAR_TOKEN')]) {
           sh '''
+            #!/usr/bin/env bash
             set -euo pipefail
 
             # Pick a known scanner version
