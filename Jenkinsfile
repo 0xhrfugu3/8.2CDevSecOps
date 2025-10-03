@@ -20,14 +20,11 @@ pipeline {
       }
       post {
         always {
-          emailext (
-            subject: "Jenkins Build - Run Tests Stage: ${currentBuild.currentResult}",
-            body: """The Run Tests stage completed with status: ${currentBuild.currentResult}.
+          mail subject: "Jenkins Build - Run Tests Stage: ${currentBuild.currentResult}",
+               body: """The Run Tests stage completed with status: ${currentBuild.currentResult}.
                      Job: ${env.JOB_NAME} [${env.BUILD_NUMBER}]
                      Check the attached log for details.""",
-            to: "fderickmarto.tech@gmail.com",
-	    attachLog: true
-          )
+               to: "fderickmarto.tech@gmail.com"
         }
       }
     }
@@ -45,14 +42,11 @@ pipeline {
       }
       post {
         always {
-          emailext (
-            subject: "Jenkins Build - Security Scan Stage: ${currentBuild.currentResult}",
-            body: """The NPM Audit stage completed with status: ${currentBuild.currentResult}.
-                     Job: ${env.JOB_NAME} [${env.BUILD_NUMBER}]
-                     Check the attached log for details.""",
-            to: "fderickmarto.tech@gmail.com",
-            attachLog: true
-          )
+            mail subject: "Jenkins Build - Security Scan Stage: ${currentBuild.currentResult}",
+                 body: """The NPM Audit stage completed with status: ${currentBuild.currentResult}.
+                       Job: ${env.JOB_NAME} [${env.BUILD_NUMBER}]
+                       Check the attached log for details.""",
+                 to: "fderickmarto.tech@gmail.com"
         }
       }
     }
