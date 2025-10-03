@@ -16,7 +16,19 @@ pipeline {
 
     stage('Run Tests') {
       steps {
-        sh 'npm test || true'  // Allows pipeline to continue despite test failtures
+        sh 'npm test || true'  // Allows pipeline to continue despite test failures
+      }
+      post {
+        always {
+          emailext {
+            subject: "Jenkins Build - Run Tests Stage: ${currentBuild.currentResult}",
+            body: """The Run Tests stage completed with status: ${currentBuild.currentResult}.
+                     Job: ${env.JOB_NAME} [${env.BUILD_NUMBER}]
+                     Check the attached log for details.""",
+            to: "fderickmarto.tech@gmail.com"
+	    attachLog: true
+          }
+        }
       }
     }
 
@@ -30,6 +42,18 @@ pipeline {
     stage('NPM Audit (Security Scan)') {
       steps {
         sh 'npm audit || true'  // This will show known CVEs in the output
+      }
+      post {
+        always {
+          emailext {
+            subject: "Jenkins Build - Security Scan Stage: ${currentBuild.currentResult}",
+            body: """The NPM Audit stage completed with status: ${currentBuild.currentResult}.
+                     Job: ${env.JOB_NAME} [${env.BUILD_NUMBER}]
+                     Check the attached log for details.""",
+            to: "fderickmarto.tech@gmail.com",
+            attachLog: true
+          }
+        }
       }
     }
 
