@@ -25,7 +25,7 @@ pipeline {
             body: """The Run Tests stage completed with status: ${currentBuild.currentResult}.
                      Job: ${env.JOB_NAME} [${env.BUILD_NUMBER}]
                      Check the attached log for details.""",
-            to: "fderickmarto.tech@gmail.com"
+            to: "fderickmarto.tech@gmail.com",
 	    attachLog: true
           )
         }
